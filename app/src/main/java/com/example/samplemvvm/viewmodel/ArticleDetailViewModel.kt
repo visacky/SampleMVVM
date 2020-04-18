@@ -4,26 +4,21 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.samplemvvm.data.api.apiresponse.ArticleResdetail
-import com.example.samplemvvm.domain.usecase.DashboardUseCase
+import com.example.samplemvvm.domain.usecase.ArticleDetailUseCase
 import kotlinx.coroutines.launch
 
-class DashboardViewModel(private val dashboardUseCase: DashboardUseCase) : ViewModel()  {
+class ArticleDetailViewModel(private val articleDetailUseCase: ArticleDetailUseCase) : ViewModel() {
 
     val isLoadingLiveData: MutableLiveData<Boolean> = MutableLiveData()
-    var articleList: List<ArticleResdetail> = listOf()
+    var articleDetail: ArticleResdetail = ArticleResdetail()
 
 
-    init {
-        initAPIService()
-    }
-
-    private fun initAPIService() {
+    fun initAPIService(fileName: String) {
         viewModelScope.launch {
             isLoadingLiveData.postValue(true)
-            dashboardUseCase.getDataUsageList( {
-                if(it != null)
-                articleList = it
+            articleDetailUseCase.getDetailArticle(fileName, {
                 isLoadingLiveData.postValue(false)
+                articleDetail = it
             }, {
                 isLoadingLiveData.postValue(false)
             })

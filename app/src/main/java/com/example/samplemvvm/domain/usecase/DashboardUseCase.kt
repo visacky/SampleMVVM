@@ -1,14 +1,14 @@
 package com.example.samplemvvm.domain.usecase
 
-import ArticleResponse
 import com.example.samplemvvm.data.api.ApiServiceRepository
 import com.example.samplemvvm.data.api.apiresponse.ArticleResdetail
-import com.example.samplemvvm.data.api.result.Result
-import com.example.samplemvvm.data.api.result.ResultTypes
+import com.example.samplemvvm.data.api.apiresponse.ArticleResponse
+import java.text.SimpleDateFormat
+import java.util.*
 
 
-class DataUsageListUseCase(private val apiServiceRepo: ApiServiceRepository) {
-    suspend fun getDataUsageList(
+class DashboardUseCase(private val apiServiceRepo: ApiServiceRepository) {
+    fun getDataUsageList(
         onSuccess: (List<ArticleResdetail>?) -> Unit,
         onError: () -> Unit
     ) {
@@ -22,7 +22,19 @@ class DataUsageListUseCase(private val apiServiceRepo: ApiServiceRepository) {
          For other scenarios we can handle the business logic here and its reusable we can use this
          usecase for other viewmodel also
          */
-        return response.list
+
+        val list = response.list.sortedByDescending { it.lastUpdate }
+        list.forEach {
+            it.lastUpdate = getDateTime(it.lastUpdate)
+        }
+
+        return list
+    }
+
+    fun getDateTime(timestamp : String) : String{
+        val mydate = Calendar.getInstance()
+        mydate.setTimeInMillis(timestamp.toLong() * 1000)
+        return SimpleDateFormat("MM/dd/yyyy").format(mydate.time)
     }
 
 }

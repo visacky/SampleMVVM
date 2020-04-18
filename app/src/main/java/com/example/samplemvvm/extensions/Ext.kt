@@ -4,7 +4,9 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.widget.Toast
+import com.example.samplemvvm.depinjection.BaseApplication
 import com.google.gson.Gson
+import java.io.IOException
 
 
 fun Context.hasNetwork(): Boolean {
@@ -14,6 +16,19 @@ fun Context.hasNetwork(): Boolean {
     if (activeNetwork != null && activeNetwork.isConnected)
         isConnected = true
     return isConnected
+}
+
+
+fun getJsonDataFromAsset(fileName : String): String? {
+    val jsonString: String
+    try {
+        jsonString = BaseApplication.appContext.assets.open(fileName).bufferedReader()
+            .use { it.readText() }
+    } catch (ioException: IOException) {
+        ioException.printStackTrace()
+        return null
+    }
+    return jsonString
 }
 
 fun Context.showTost(message: String) {

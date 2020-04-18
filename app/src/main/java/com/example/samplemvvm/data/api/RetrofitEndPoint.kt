@@ -1,6 +1,6 @@
 package com.example.samplemvvm.data.api
 
-import ArticleResponse
+import com.example.samplemvvm.data.api.apiresponse.ArticleResponse
 import kotlinx.coroutines.Deferred
 import retrofit2.http.GET
 
